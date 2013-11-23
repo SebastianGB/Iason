@@ -1,13 +1,10 @@
 # Compiled Object files
-*.slo
-*.lo
+.cproject
+.project
+*~
+.metadata
 *.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+*.elf
+*.d
+*.mk
+Debug
