@@ -21,7 +21,7 @@
 #include <libopencm3/stm32/f1/gpio.h>
 #include <libopencm3/stm32/usart.h>
 
-static void clock_setup(void)
+void clock_setup(void)
 {
 	rcc_clock_setup_in_hse_8mhz_out_24mhz();
 
@@ -33,11 +33,15 @@ static void clock_setup(void)
 	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_USART1EN);
 }
 
-static void usart_setup(void)
+void usart_setup(void)
 {
 	/* Setup GPIO pin GPIO_USART1_TX/GPIO9 on GPIO port A for transmit. */
 	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
 		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
+
+	/* Setup GPIO pin for transmit*/
+	gpio_set_mode(GPIOA, GPIO_MODE_INPUT,
+		      GPIO_CNF_INPUT_FLOAT, GPIO_USART1_RX);
 
 	/* Setup UART parameters. */
 	// usart_set_baudrate(USART1, 38400);
@@ -47,7 +51,7 @@ static void usart_setup(void)
 
 	usart_set_databits(USART1, 8);
 	usart_set_stopbits(USART1, USART_STOPBITS_1);
-	usart_set_mode(USART1, USART_MODE_TX);
+	usart_set_mode(USART1, USART_MODE_TX_RX);
 	usart_set_parity(USART1, USART_PARITY_NONE);
 	usart_set_flow_control(USART1, USART_FLOWCONTROL_NONE);
 
@@ -55,7 +59,7 @@ static void usart_setup(void)
 	usart_enable(USART1);
 }
 
-static void gpio_setup(void)
+void gpio_setup(void)
 {
 	/* Set GPIO9 (in GPIO port C) to 'output push-pull'. [LED] */
 	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
@@ -64,17 +68,23 @@ static void gpio_setup(void)
 
 int main(void)
 {
-	int i, j = 0, c = 0;
+	int i = 0;
+	int j = 0;
 
 	clock_setup();
 	gpio_setup();
 	usart_setup();
+	uint16_t rec = 0;
 
 	/* Blink the LED (PC9) on the board with every transmitted byte. */
 	while (1) {
 		gpio_toggle(GPIOC, GPIO9);	/* LED on/off */
-		usart_send_blocking(USART1, c + '0'); /* USART1: Send byte. */
-		c = (c == 9) ? 0 : c + 1;	/* Increment c. */
+		rec = usart_recv(USART1);
+		gpio_toggle(GPIOC, GPIO9);
+		gpio_toggle(GPIOC, GPIO9);
+		usart_send_blocking(USART1, rec); /* USART1: Send byte. */
+		rec = rec + 1;	/* Increment c. */
+		usart_send_blocking(USART1, rec); /* USART1: Send byte. */
 		if ((j++ % 80) == 0) {		/* Newline after line full. */
 			usart_send_blocking(USART1, '\r');
 			usart_send_blocking(USART1, '\n');
@@ -85,4 +95,3 @@ int main(void)
 
 	return 0;
 }
-

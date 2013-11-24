@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : SerialTest.c
- Author      : 
+ Author      :
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
@@ -20,9 +20,11 @@ int fd2;
 int wr, nbytes, tries;
 int rd;
 
+//TODO: check terminos flags
 int configure_port(int fd)      // configure the port
 {
 	struct termios port_settings;      // structure to store the port settings in
+	memset(&port_settings, 0, sizeof(port_settings));
 
 	cfsetispeed(&port_settings, B38400);    // set baud rates
 	cfsetospeed(&port_settings, B38400);
@@ -30,6 +32,8 @@ int configure_port(int fd)      // configure the port
 //	port_settings.c_cflag &= ~PARENB;    // set no parity, stop bits, data bits
 //	port_settings.c_cflag &= ~CSTOPB;
 //	port_settings.c_cflag &= ~CSIZE;
+	port_settings.c_cc[VMIN] = 1;
+	port_settings.c_cc[VTIME] = 5;
 //	port_settings.c_cflag |= CS8;
 
 	tcsetattr(fd, TCSANOW, &port_settings);    // apply the settings to the port
@@ -47,6 +51,7 @@ int main() {
 		fcntl(fd1, F_SETFL, 0);
 		printf("Successfully opened serial connection and %d is the file description\n",
 				fd1);
+		fflush(stdout);
 	}
 
 	fd1 = configure_port(fd1);
@@ -62,14 +67,23 @@ int main() {
 	char buff[10];
 	int k;
 	for(k = 0; k < 5; k++){
-//		printf("Try to send byte ...\n");
+		printf("Try to send byte ...\n");
 		fflush(stdout);
-		wr = write(fd1, message, 1);
+		wr = 0;
+		while(wr <= 0){
+			wr = write(fd1, message, 1);
+			usleep(1000);
+		}
 
-//		printf("Try to receive byte ...\n");
+		printf("Try to receive byte ...\n");
 		fflush(stdout);
 
-		rd = read(fd1, (void*)buff, 10);
+		rd = -1;
+		while(rd <= 0){
+			rd = read(fd1, (void*)buff, 1);
+			usleep(100);
+//			printf("Check");
+		}
 
 		if(rd == -1){
 			k--;
@@ -94,5 +108,4 @@ int main() {
 }
 
 //TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
-
 
