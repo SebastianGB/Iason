@@ -12,7 +12,7 @@ cd *summon-arm-toolchain*
 echo 'PATH=$PATH:~/sat/bin' >> ~/.bashrc
 
 #insatll st-link (zum flashen)
-git clone git@github.com:texane/stlink.git
+git clone https://github.com/texane/stlink.git
 
 #only needs libusb as dependency, should already be there on a ubuntu	
 cd stlink
