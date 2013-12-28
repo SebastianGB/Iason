@@ -95,6 +95,8 @@ void delay(int d) {
 	}
 }
 
+#define PWM_WIDTH_MULTIPLICATOR	100
+
 int main(void) {
 
 	// ++++++++++++++++++++++++ pwm +++++++++++++++++++++
@@ -111,44 +113,53 @@ int main(void) {
 	gpio_setup();
 	usart_setup();
 	uint16_t rec = 0;
+	uint16_t old_byte_received = 0;
 
 	// +++++++++++++++++++++++++ usart end ++++++++++++++++
 
 
 	gpio_set(GPIOC, GPIO8);
 
-	int currentWidth = ESC_MAX;
+	int currentPulseWidthMotor1 = 0;
+	int currentPulseWidthMotor2 = 0;
+
 
 	while (1) {
 
 		//PWM
-		esc_set_pulse_width(ESC_CHANNEL1, currentWidth);
-//		if(currentWidth == ESC_MAX){
-//			currentWidth = ESC_LOW;
-//		} else if (currentWidth == ESC_LOW) {
-//			currentWidth = ESC_MID;
-//		} else {
-//			currentWidth = ESC_MAX;
-//		}
+		esc_set_pulse_width(ESC_CHANNEL1, currentPulseWidthMotor1);
+		esc_set_pulse_width(ESC_CHANNEL2, currentPulseWidthMotor2);
+
 		gpio_toggle(GPIOC, GPIO8);
 
 		//USART
 		//can only read 1 byte at the same time!!!
 		rec = usart_recv(USART1);
+		if(rec != old_byte_received) {
+			usart_send_blocking(USART1, rec); /* USART1: Send byte. */
+		}
 		if(rec == 200){
 			gpio_toggle(GPIOC, GPIO9);	/* LED on/off */
 		}
-		currentWidth = rec * 10;
+
+		//filter out only the 8 lowest bits
+		uint16_t tmp = rec & 0x00FF;
+		if((tmp >> 7) == 0){
+			//filter out first bit
+			currentPulseWidthMotor1 = (rec&0x7F) * PWM_WIDTH_MULTIPLICATOR;
+		} else {
+			currentPulseWidthMotor2 = (rec&0x7F) * PWM_WIDTH_MULTIPLICATOR;
+		}
+//		currentPulseWidthMotor1 = rec * 10;
 		//can only send 1 byte at the same time!!!
-		usart_send_blocking(USART1, rec); /* USART1: Send byte. */
-//		rec = rec + 1;	/* Increment c. */
-//		usart_send_blocking(USART1, rec); /* USART1: Send byte. */
 		if ((j++ % 80) == 0) {		/* Newline after line full. */
 			usart_send_blocking(USART1, '\r');
 			usart_send_blocking(USART1, '\n');
 		}
 
 		delay(100000);
+
+		old_byte_received = rec;
 	}
 
 	return 0;

@@ -68,7 +68,7 @@ int main() {
 //	With following code we send to device some bitsiostream:
 
 //	And for reading response from device:
-	char buff[10];
+	char readBuffer[10];
 	char run = 1;
 	string consoleInput;
 	while(run){
@@ -87,30 +87,44 @@ int main() {
 		char writeBytes[1];
 		memcpy((void *)writeBytes, (void*)&pwmWidth, 1);
 
-		numberWrittenBytes = 0;
-		int currentWritten = 0;
-		while(numberWrittenBytes < 1){
-			currentWritten = write(fd1, (void*)&(writeBytes[numberWrittenBytes]), 1 - numberWrittenBytes);
-			numberWrittenBytes += currentWritten;
-			usleep(1000000);
-			cout << "write-check" << endl;
-		}
-
-		cout << "Try to receive byte ..." << endl;
-
-		numberReadBytes = 0;
-		int numRead = 0;
-		while(numberReadBytes < 1){
-			numRead = read(fd1, (void*)&(buff[numberReadBytes]), 1 - numberReadBytes);
-			numberReadBytes += numRead;
+		bool byteWritten = false;
+		while(!byteWritten){
 			usleep(1000);
-			cout << "read-check" << endl;
+			int numberBytesWritten = write(fd1, (void*)&(writeBytes[0]), 1);
+			if(numberBytesWritten == 1){
+				byteWritten = true;
+			} else {
+				cout << "numberBytesWritten byte is smaller zero: " << numberBytesWritten << endl;
+				return -1;
+			}
+			cout << "write-check ... number bytes written: " << numberBytesWritten << endl;
 		}
 
-		cout << "Bytes read are %i: " << numberReadBytes << endl;
+		cout << "Try to receive byte ...\n";
+
+		bool byteRead = false;
+		while(!byteRead){
+			usleep(10000);
+			int numberBytesRead = read(fd1, (void*)&(readBuffer[0]), 1);
+			if(numberBytesRead > 1){
+				cout << "read more than 2 bytes at the same time!" << endl;
+				return -1 ;
+			}
+			else if(numberBytesRead < 0){
+				cout << "############# error during read ################" << endl;
+				continue;
+			} else if(numberBytesRead == 1){
+				byteRead = true;
+			}
+			if(readBuffer[0] == 10 || readBuffer[0] == 13){
+				cout << "Stop/Start Byte received!" << endl;
+				byteRead = false;
+			}
+			cout << "read-check; numRead is " << numberBytesRead << endl;
+		}
 
 		uint8_t receivedPWMWidth = 0;
-		memcpy((void *)&receivedPWMWidth, (void*)buff, 1);
+		memcpy((void *)&receivedPWMWidth, (void*)readBuffer, 1);
 
 		if(receivedPWMWidth == pwmWidth){
 			cout << "Same value!" << endl;
