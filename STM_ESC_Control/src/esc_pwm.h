@@ -19,12 +19,14 @@
 
 #define ESC_TIMER		TIM4
 
+
 /**
  * Timer channel for ESC.
  *
  * Changing this also requires to change settings in!
  */
-#define ESC_CHANNEL1		TIM_OC2
+#define ESC_CHANNEL1		TIM_OC1//TIM_OC1//TIM_OC2
+#define ESC_CHANNEL2		TIM_OC2//TIM_OC1//TIM_OC2
 
 /**
  * Initialize and start the PWM used for the ESCs
