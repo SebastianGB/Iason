@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sys/time.h>
 #include "WheelEngine.h"
+#include "STMCommunicator.h"
 
 class WheelPlatform {
 private:
@@ -18,15 +19,23 @@ private:
 	float _linearVelocity; // m/s
 	float _angularAcceleration; // degree/s²
 	float _linearAcceleration; // m/s²
-	WheelEngine _engine;
+	WheelEngine *_engineLeft;
+	WheelEngine *_engineRight;
+	STMCommunicator _stmCom;
 	struct timeval _oldSysTime;
 	struct timeval _newSysTime;
 	float _elapsedTime; // elapsed Time since last update() was called (in seconds)
+	float _distOfEngineWheels; // m
+
+	char _sentPulseWithLeft;
+	char _sentPulseWithRight;
+
+	int controlWheels();
 
 public:
 
 	WheelPlatform();
-	void update();
+	int update();
 	virtual ~WheelPlatform();
 
 	float getAngularVelocity() const {

@@ -9,13 +9,14 @@
 
 
 Steering::Steering(WheelPlatform *wheelPlatform, GCSCommunicator *communicator) {
-	// TODO Auto-generated constructor stub
 	_wheelPlatform = wheelPlatform;
 	_communicator = communicator;
-	_linearAcceleration = 0.1f;
+	_linearAcceleration = 0.5f;
 	_angularAcceleration = 2.0f;
 
 	splaMethodInstance = &Steering::steerPositiveLinearAcceleration;
+
+	std::cout << "Steering created"  << std::endl;
 }
 
 void Steering::update()

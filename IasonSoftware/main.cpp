@@ -42,36 +42,40 @@ int main ()
 
 
 
-WheelPlatform wheelPlatform;
-GCSCommunicator communicator = GCSCommunicator(24698);
-Steering steering = Steering(&wheelPlatform, &communicator);
+WheelPlatform *wheelPlatform;
+GCSCommunicator *communicator;
+Steering *steering;
 
 void terminateSignalHandler(int signal)
 {
-	std::cout << "termination Handler called";
-	communicator.~GCSCommunicator();
+	std::cout << "termination Handler called" << std::endl;
+	communicator->~GCSCommunicator();
 	exit(signal);
 }
-
+//TODO rename v1 - 4
 void v1()
 {
-	steering.steerPositiveLinearAcceleration();
+	steering->steerPositiveLinearAcceleration();
 }
 void v2()
 {
-	steering.steerNegativeLinearAcceleration();
+	steering->steerNegativeLinearAcceleration();
 }
 void v3()
 {
-	steering.steerPositiveAngularAcceleration();
+	steering->steerPositiveAngularAcceleration();
 }
 void v4()
 {
-	steering.steerNegativeAngularAcceleration();
+	steering->steerNegativeAngularAcceleration();
 }
 
 int main()
 {
+	wheelPlatform = new WheelPlatform();
+	communicator = new GCSCommunicator(24718);
+	steering = new Steering(wheelPlatform, communicator);
+
 	signal(SIGINT,terminateSignalHandler);
 	signal(SIGQUIT,terminateSignalHandler);
 	signal(SIGSTOP,terminateSignalHandler);
@@ -79,18 +83,23 @@ int main()
 	signal(SIGTERM,terminateSignalHandler);
 
 
-	communicator.addOnComObjChangeFunktion(STEERING_EVENT, KEY_UP, v1);
-	communicator.addOnComObjChangeFunktion(STEERING_EVENT, KEY_DOWN, v2);
-	communicator.addOnComObjChangeFunktion(STEERING_EVENT, KEY_LEFT, v3);
-	communicator.addOnComObjChangeFunktion(STEERING_EVENT, KEY_RIGHT, v4);
+	communicator->addOnComObjChangeFunktion(STEERING_EVENT, KEY_UP, v1);
+	communicator->addOnComObjChangeFunktion(STEERING_EVENT, KEY_DOWN, v2);
+	communicator->addOnComObjChangeFunktion(STEERING_EVENT, KEY_LEFT, v3);
+	communicator->addOnComObjChangeFunktion(STEERING_EVENT, KEY_RIGHT, v4);
 
 
 	bool run = true;
 	while(run)
 	{
-		communicator.update();
-		steering.update();
-		wheelPlatform.update();
+		communicator->update();
+		steering->update();
+		if(wheelPlatform->update() != 0)
+		{
+			std::cout << "Connection closed by main" << std::endl;
+			communicator->~GCSCommunicator();
+		}
+		usleep(100000);
 	}
 
 

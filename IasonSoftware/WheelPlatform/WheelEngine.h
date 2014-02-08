@@ -9,10 +9,19 @@
 #define WHEELENGINE_H_
 
 #include <math.h>
+#include <stdlib.h>
+#include "STMCommunicator.h"
 
 #ifndef M_PI
 #define M_PI    3.14159265358979323846f
 #endif
+
+
+enum wheelPosition
+{
+	LEFT,
+	RIGHT
+};
 
 class WheelEngine {
 private:
@@ -29,6 +38,8 @@ private:
 	float _linearVelocity; // in meters per second
 	int _pulseWith;
 	int _period;
+	wheelPosition _position;
+	uint16_t _sentUsartPwmValue;
 
 	float _linToRot(float linearVelocity);
 	float _rotToLin(float rotationVelocity);
@@ -37,9 +48,11 @@ private:
 public:
 	float getLinearVelocity(){return _linearVelocity;}
 	void setLinearVelocity(float value){_linearVelocity = value;}
+	int getPulseWith(){return _pulseWith;}
 
-	WheelEngine();
-	void getPWMOutput(int *outPWMPeriod, int *outPWMPulseWidth);
+	WheelEngine(wheelPosition position);
+	int deploy(STMCommunicator *stmCom);
+	int initializeEngine(STMCommunicator *stmCom);
 	virtual ~WheelEngine();
 };
 

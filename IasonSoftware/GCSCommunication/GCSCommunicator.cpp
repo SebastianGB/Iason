@@ -7,6 +7,7 @@
 
 #include "GCSCommunicator.h"
 
+//server
 GCSCommunicator::GCSCommunicator(int port) {
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -19,8 +20,10 @@ GCSCommunicator::GCSCommunicator(int port) {
 	if (bind(sockfd, (struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
 		error("ERROR on binding");
 	listenForConnections();
+	std::cout << "GCSCommunicator was started (server)";
 }
 
+//client
 GCSCommunicator::GCSCommunicator(char *hostIP, int port)
 {
    portno = port;
@@ -33,6 +36,7 @@ GCSCommunicator::GCSCommunicator(char *hostIP, int port)
        exit(0);
    }
    connectToServer();
+   std::cout << "GCSCommunicator was started (client)";
 }
 
 void GCSCommunicator::error(const char *msg)
