@@ -97,6 +97,15 @@ void delay(int d) {
 
 #define PWM_WIDTH_MULTIPLICATOR	100
 
+int usartPwmtoPwm(int value, int direction){
+
+	if(direction){
+		return 1400 - (value * 400) / 63;
+	} else {
+		return 1400 + (value * 400) / 63;
+	}
+}
+
 int main(void) {
 
 	// ++++++++++++++++++++++++ pwm +++++++++++++++++++++
@@ -143,12 +152,26 @@ int main(void) {
 		}
 
 		//filter out only the 8 lowest bits
-		uint16_t tmp = rec & 0x00FF;
-		if((tmp >> 7) == 0){
+		uint16_t payload = rec & 0x00FF;
+
+		//motor = 0 when left, motor = 1 when right
+		uint16_t motor = payload;
+		motor = motor >> 7;
+
+		uint16_t direction = payload;
+		direction = direction >> 6;
+		direction &= 0x0001;
+
+		uint16_t usartPwmValue = payload;
+		usartPwmValue &= 0x003F;
+
+		uint16_t pwmValue = usartPwmtoPwm(usartPwmValue, direction);
+
+		if((motor) == 0){
 			//filter out first bit
-			currentPulseWidthMotor1 = (rec&0x7F) * PWM_WIDTH_MULTIPLICATOR;
+			currentPulseWidthMotor1 = pwmValue;
 		} else {
-			currentPulseWidthMotor2 = (rec&0x7F) * PWM_WIDTH_MULTIPLICATOR;
+			currentPulseWidthMotor2 = pwmValue;
 		}
 //		currentPulseWidthMotor1 = rec * 10;
 		//can only send 1 byte at the same time!!!
