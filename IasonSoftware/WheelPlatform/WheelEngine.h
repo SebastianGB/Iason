@@ -34,7 +34,7 @@ private:
 	int _escPWMForwardsMax;
 	int _escPWMForwardsMin;
 	int _escPWMBreak;
-	float _rotationVelocity; // rotations per second
+	float _rotatingVelocity; // rotations per second
 	float _linearVelocity; // in meters per second
 	int _pulseWith;
 	int _period;

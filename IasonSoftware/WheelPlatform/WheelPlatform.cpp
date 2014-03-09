@@ -12,7 +12,12 @@ WheelPlatform::WheelPlatform() {
 	gettimeofday (&_newSysTime, NULL);
 	_oldSysTime = _newSysTime;
 
-	_distOfEngineWheels = 0.55f;
+	_targetLinearVelocity = 0;
+	_targetAngularVelocity = 0;
+	_currentAngularVelocity = 0;
+	_currentLinearVelocity = 0;
+	_elapsedTime = 0;
+	_wheelBase = 0.55f;
 	_stmCom.open_STM_board();
 	usleep(10000);
 
@@ -24,14 +29,14 @@ WheelPlatform::WheelPlatform() {
 	std::cout << "WheelPlatform created"  << std::endl;
 }
 
-int WheelPlatform::controlWheels()
+int WheelPlatform::setWheelVelocities()
 {
 	_engineLeft->setLinearVelocity(
-		_linearVelocity - ((_angularVelocity*M_PI*_distOfEngineWheels)/360)
+		_currentLinearVelocity - ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
 		);
 
 	_engineRight->setLinearVelocity(
-		_linearVelocity + ((_angularVelocity*M_PI*_distOfEngineWheels)/360)
+		_currentLinearVelocity + ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
 		);
 
 	int errorstateLeft = _engineLeft->deploy(&_stmCom);
@@ -60,13 +65,14 @@ int WheelPlatform::update()
     _elapsedTime = ((float)diff)/1000000;
 	_oldSysTime = _newSysTime;
 
+	float alpha = 0.95f;
 	//set velocitys
-	_linearVelocity += _linearAcceleration * _elapsedTime;
-	_angularVelocity += _angularAcceleration * _elapsedTime;
+	_currentLinearVelocity = _currentLinearVelocity * alpha + _targetLinearVelocity * (1 - alpha);
+	_currentAngularVelocity = _currentAngularVelocity * alpha + _targetAngularVelocity * (1 - alpha);
 
 	//std::cout << _linearVelocity << "    " << _angularVelocity << "\n";
 
-	return controlWheels();
+	return setWheelVelocities();
 }
 
 WheelPlatform::~WheelPlatform() {

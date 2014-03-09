@@ -19,7 +19,7 @@ WheelEngine::WheelEngine(wheelPosition position) {
 	_escPWMForwardsMax = 2000;
 	_escPWMForwardsMin = 1600;
 	_escPWMBreak = 1500;
-	_rotationVelocity = 0.0f;
+	_rotatingVelocity = 0.0f;
 	_linearVelocity = 0.0f;
 	_sentUsartPwmValue = -1;
 
@@ -38,29 +38,31 @@ float WheelEngine::_rotToLin(float rotationVelocity)
 {
 	return _wheelPerimeter*rotationVelocity;
 }
-void WheelEngine::_rotToPWM(float rotationVelocity, int *outPWMPeriod, int *outPWMPulseWidth)
+void WheelEngine::_rotToPWM(float rotatingVelocity, int *outPWMPeriod, int *outPWMPulseWidth)
 {
 	(*outPWMPeriod) = _escPWMPeriod;
 	// break
-	if(abs(rotationVelocity) < 0.1f)
+	if(fabs(rotatingVelocity) < 0.1f)
 	{
 		(*outPWMPulseWidth) = _escPWMBreak;
 	}
 	else
 	{
 		//forwards
-		if(rotationVelocity > 0)
+		if(rotatingVelocity > 0)
 		{
-			(*outPWMPulseWidth) = _escPWMForwardsMin + rotationVelocity*(_escPWMForwardsMax-_escPWMForwardsMin)/(float)_engineMaxRotationVelocity;
+			(*outPWMPulseWidth) = _escPWMForwardsMin + rotatingVelocity*(_escPWMForwardsMax-_escPWMForwardsMin)/(float)_engineMaxRotationVelocity;
+			//bounding
 			if((*outPWMPulseWidth) > _escPWMForwardsMax)
 			{
 				(*outPWMPulseWidth) = _escPWMForwardsMax;
 			}
 		}
 		//backwards
-		if(rotationVelocity < 0)
+		if(rotatingVelocity < 0)
 		{
-			(*outPWMPulseWidth) = _escPWMBackwardsMin + rotationVelocity*(_escPWMBackwardsMin-_escPWMBackwardsMax)/(float)_engineMaxRotationVelocity;
+			(*outPWMPulseWidth) = _escPWMBackwardsMin + rotatingVelocity*(_escPWMBackwardsMin-_escPWMBackwardsMax)/(float)_engineMaxRotationVelocity;
+			//bounding
 			if((*outPWMPulseWidth) < _escPWMBackwardsMax)
 			{
 				(*outPWMPulseWidth) = _escPWMBackwardsMax;
@@ -72,8 +74,13 @@ void WheelEngine::_rotToPWM(float rotationVelocity, int *outPWMPeriod, int *outP
 
 int WheelEngine::deploy(STMCommunicator *stmCom)
 {
-	_rotationVelocity = _linToRot(_linearVelocity);
-	_rotToPWM(_rotationVelocity,&_period,&_pulseWith);
+	_rotatingVelocity = _linToRot(_linearVelocity);
+
+	std::cout << "Wheel: " << _position << "lin V: " << _linearVelocity << std::endl;
+	std::cout << "Wheel: " << _position << "rot V: " << _rotatingVelocity << std::endl;
+
+	_rotToPWM(_rotatingVelocity,&_period,&_pulseWith);
+	std::cout << "Wheel: " << _position << "pwm: " << _pulseWith << std::endl;
 
 
 

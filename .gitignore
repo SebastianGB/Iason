@@ -7,4 +7,6 @@
 *.elf
 *.d
 *.mk
+*.pro.user
 Debug
+debug

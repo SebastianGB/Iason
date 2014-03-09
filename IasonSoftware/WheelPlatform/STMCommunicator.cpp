@@ -86,11 +86,13 @@ int STMCommunicator::writeByte(uint16_t byteToWrite){
 		}
 		else if(numberBytesRead < 0){
 			//TODO handle special error case else print nothing..
-			cout << "read error: " << errno;
-			char buffer[256];
-			char * errorMessage = strerror_r(errno, buffer, 256);
-			cout << errorMessage << endl;
-			//return -1;
+			if(!errno == 11){ //temporarily unvailable case
+				cout << "read error: " << errno;
+				char buffer[256];
+				char * errorMessage = strerror_r(errno, buffer, 256);
+				cout << errorMessage << endl;
+				//return -1;
+			}
 			continue;
 		} else if(numberBytesRead == 1){
 			byteRead = true;

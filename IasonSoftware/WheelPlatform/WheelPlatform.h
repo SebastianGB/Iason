@@ -15,22 +15,22 @@
 
 class WheelPlatform {
 private:
-	float _angularVelocity; // degree/s
-	float _linearVelocity; // m/s
-	float _angularAcceleration; // degree/s²
-	float _linearAcceleration; // m/s²
+	float _currentAngularVelocity; // degree/s
+	float _currentLinearVelocity; // m/s
+	float _targetAngularVelocity; // degree/s
+	float _targetLinearVelocity; // m/s
 	WheelEngine *_engineLeft;
 	WheelEngine *_engineRight;
 	STMCommunicator _stmCom;
 	struct timeval _oldSysTime;
 	struct timeval _newSysTime;
 	float _elapsedTime; // elapsed Time since last update() was called (in seconds)
-	float _distOfEngineWheels; // m
+	float _wheelBase; // m
 
 	char _sentPulseWithLeft;
 	char _sentPulseWithRight;
 
-	int controlWheels();
+	int setWheelVelocities();
 
 public:
 
@@ -38,36 +38,20 @@ public:
 	int update();
 	virtual ~WheelPlatform();
 
-	float getAngularVelocity() const {
-		return _angularVelocity;
+	float getTargetAngularVelocity() const {
+		return _targetAngularVelocity;
 	}
 
-	void setAngularVelocity(float angularVelocity) {
-		_angularVelocity = angularVelocity;
+	void setTargetAngularVelocity(float angularVelocity) {
+		_targetAngularVelocity = angularVelocity;
 	}
 
-	float getLinearVelocity() const {
-		return _linearVelocity;
+	float getTargetLinearVelocity() const {
+		return _targetLinearVelocity;
 	}
 
-	void setLinearVelocity(float linearVelocity) {
-		_linearVelocity = linearVelocity;
-	}
-
-	float getAngularAcceleration() const {
-		return _angularAcceleration;
-	}
-
-	void setAngularAcceleration(float angularAcceleration) {
-		_angularAcceleration = angularAcceleration;
-	}
-
-	float getLinearAcceleration() const {
-		return _linearAcceleration;
-	}
-
-	void setLinearAcceleration(float linearAcceleration) {
-		_linearAcceleration = linearAcceleration;
+	void setTargetLinearVelocity(float linearVelocity) {
+		_targetLinearVelocity = linearVelocity;
 	}
 };
 
