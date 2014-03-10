@@ -16,10 +16,67 @@
 #include <unistd.h>
 #include <stdint.h>
 
+#include <math.h>
+
 #include <iostream>
 #include <sstream>
 
 using namespace std;
+
+float _wheelRadius = 0.27f;
+float _wheelPerimeter = 2*_wheelRadius*M_PI;
+float _engineMaxRotationVelocity = 2;
+//float _escPWMPeriod = 10000;
+float _escPWMBackwardsMax = 1000;
+float _escPWMBackwardsMin = 1400;
+float _escPWMForwardsMax = 2000;
+float _escPWMForwardsMin = 1600;
+float _escPWMBreak = 1500;
+float _rotationVelocity = 0.0f;
+float _linearVelocity = 0.0f;
+float _sentUsartPwmValue = -1;
+
+uint16_t pwmToUsartValue(uint16_t _pulseWith){
+	uint16_t usartPwmValue;
+	const uint16_t one = 1;
+	//stop case
+	if(_pulseWith >= _escPWMBackwardsMin && _pulseWith <= _escPWMForwardsMin)
+	{
+		usartPwmValue = 0;
+//		usartPwmValue |= (one << 6);
+	}
+	//backward
+	else if(_pulseWith <= _escPWMBackwardsMin)
+	{
+		usartPwmValue = 63*(_escPWMBackwardsMin - _pulseWith)/(float)400;
+		// check bound
+		if(usartPwmValue >= (one << 6))
+		{
+			usartPwmValue = (one << 6) -1;
+		}
+	}
+	//forward
+	else if(_pulseWith >= _escPWMForwardsMin)
+	{
+		usartPwmValue = 63*(_pulseWith - _escPWMForwardsMin)/(float)400;
+		//check bound
+		if(usartPwmValue >= (one << 6))
+		{
+			usartPwmValue = (one << 6) -1;
+		}
+		usartPwmValue |= (one << 6);
+	}
+
+	//for choosing wheel
+//	usartPwmValue |= (one << 7);
+
+    if(usartPwmValue == 13)
+            usartPwmValue = 12;
+    if(usartPwmValue == 10)
+            usartPwmValue = 9;
+
+    return usartPwmValue;
+}
 
 
 class STMCommunicator{
@@ -148,8 +205,6 @@ int main() {
 
 	mySTMCommunicator.open_STM_board();
 
-//	And for reading response from device:
-
 	char run = 1;
 	string consoleInput;
 	while(run){
@@ -160,14 +215,19 @@ int main() {
 		uint16_t pwmWidth;
 		istringstream buffer(consoleInput);
 		buffer >> pwmWidth;
+		cout << "PWM value after conversion: " << pwmWidth << endl;
+		pwmWidth = pwmToUsartValue(pwmWidth);
+		cout << "Try to send usartPwmValue ..." << pwmWidth << endl;
 
-		cout << "Try to send pulse width ..." << pwmWidth << endl;
+//		uint16_t pwmWidth;
+//		istringstream buffer(consoleInput);
+//		buffer >> pwmWidth;
+//		cout << "Try to send pulse width ..." << pwmWidth << endl;
 
 		mySTMCommunicator.writeByte(pwmWidth);
 
 	}
 
-//	At the end, close the connection:
 	return 0;
 }
 
