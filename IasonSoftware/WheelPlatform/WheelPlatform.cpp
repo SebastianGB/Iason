@@ -65,7 +65,7 @@ int WheelPlatform::update()
     _elapsedTime = ((float)diff)/1000000;
 	_oldSysTime = _newSysTime;
 
-	float alpha = 0.95f;
+	float alpha = 0.9f;
 	//set velocitys
 	_currentLinearVelocity = _currentLinearVelocity * alpha + _targetLinearVelocity * (1 - alpha);
 	_currentAngularVelocity = _currentAngularVelocity * alpha + _targetAngularVelocity * (1 - alpha);

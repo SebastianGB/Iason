@@ -13,7 +13,7 @@ WheelEngine::WheelEngine(wheelPosition position) {
 	_wheelRadius = 0.27f;
 	_wheelPerimeter = 2*_wheelRadius*M_PI;
 	_engineMaxRotationVelocity = 2;
-	_escPWMPeriod = 20000;
+	_escPWMPeriod = 10000;
 	_escPWMBackwardsMax = 1000;
 	_escPWMBackwardsMin = 1400;
 	_escPWMForwardsMax = 2000;
@@ -95,7 +95,7 @@ int WheelEngine::deploy(STMCommunicator *stmCom)
 	//backward
 	else if(_pulseWith <= _escPWMBackwardsMin)
 	{
-		usartPwmValue = 63*(_escPWMBackwardsMin - _pulseWith)/(float)400;
+		usartPwmValue = 63*(_escPWMBackwardsMin - _pulseWith)/(float)(_escPWMBackwardsMin - _escPWMBackwardsMax);
 		// check bound
 		if(usartPwmValue >= (one << 6))
 		{

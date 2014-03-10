@@ -11,7 +11,7 @@
 Steering::Steering(WheelPlatform *wheelPlatform, GCSCommunicator *communicator) {
 	_wheelPlatform = wheelPlatform;
 	_communicator = communicator;
-	_linearVelo = 2.0f;
+	_linearVelo = 2.5f;
 	_angularVelo = 90.0f;
 
 	splaMethodInstance = &Steering::steerPositiveLinearVelo;
