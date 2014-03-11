@@ -99,7 +99,7 @@ int main()
 			std::cout << "Connection closed by main" << std::endl;
 			communicator->~GCSCommunicator();
 		}
-		usleep(100000);
+		usleep(10000);
 	}
 
 

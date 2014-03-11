@@ -41,7 +41,7 @@ UserEventsHandler::UserEventsHandler(QWidget *parent) :
     _gcsMsg->show();
 
 
-    communicator = new GCSCommunicator("127.0.0.1",24719);
+    communicator = new GCSCommunicator("192.168.0.103",24719);
 
 }
 

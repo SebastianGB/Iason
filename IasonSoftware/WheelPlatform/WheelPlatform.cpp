@@ -32,11 +32,11 @@ WheelPlatform::WheelPlatform() {
 int WheelPlatform::setWheelVelocities()
 {
 	_engineLeft->setLinearVelocity(
-		_currentLinearVelocity - ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
+		_currentLinearVelocity + ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
 		);
 
 	_engineRight->setLinearVelocity(
-		_currentLinearVelocity + ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
+		_currentLinearVelocity - ((_currentAngularVelocity*M_PI*_wheelBase)/360.0f)
 		);
 
 	int errorstateLeft = _engineLeft->deploy(&_stmCom);
@@ -65,7 +65,7 @@ int WheelPlatform::update()
     _elapsedTime = ((float)diff)/1000000;
 	_oldSysTime = _newSysTime;
 
-	float alpha = 0.9f;
+	float alpha = 0.95f;
 	//set velocitys
 	_currentLinearVelocity = _currentLinearVelocity * alpha + _targetLinearVelocity * (1 - alpha);
 	_currentAngularVelocity = _currentAngularVelocity * alpha + _targetAngularVelocity * (1 - alpha);
