@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="TTS" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\cmake\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/brunner/Iason/TTS/qt-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="TTS">
+         <Option output="/home/brunner/Iason/TTS/bin/TTS" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/brunner/Iason/TTS/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/brunner/Iason/TTS/Espeak_INCLUDE_DIR" />
+            <Add directory="/home/brunner/Iason/TTS/Portaudio_INCLUDE_DIR" />
+            <Add directory="/home/brunner/Iason/TTS/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.6" />
+            <Add directory="/usr/include/c++/4.6/backward" />
+            <Add directory="/usr/include/c++/4.6/x86_64-linux-gnu/." />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.6/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 TTS" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="TTS/fast">
+         <Option output="/home/brunner/Iason/TTS/bin/TTS" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/brunner/Iason/TTS/bin" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/brunner/Iason/TTS/Espeak_INCLUDE_DIR" />
+            <Add directory="/home/brunner/Iason/TTS/Portaudio_INCLUDE_DIR" />
+            <Add directory="/home/brunner/Iason/TTS/include" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/4.6" />
+            <Add directory="/usr/include/c++/4.6/backward" />
+            <Add directory="/usr/include/c++/4.6/x86_64-linux-gnu/." />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.6/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 TTS/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/brunner/Iason/TTS/qt-build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/brunner/Iason/TTS/qt-build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/brunner/Iason/TTS/src/espeak.cpp">
+      </Unit>
+      <Unit filename="/home/brunner/Iason/TTS/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/brunner/Iason/TTS/cmake/FindPortaudio.cmake">
+          <Option virtualFolder="CMake Files\cmake\" />
+      </Unit>
+      <Unit filename="/home/brunner/Iason/TTS/cmake/LibFindMacros.cmake">
+          <Option virtualFolder="CMake Files\cmake\" />
+      </Unit>
+      <Unit filename="/home/brunner/Iason/TTS/cmake/FindEspeak.cmake">
+          <Option virtualFolder="CMake Files\cmake\" />
+      </Unit>
+      <Unit filename="/home/brunner/Iason/TTS/cmake/LibFindMacros.cmake">
+          <Option virtualFolder="CMake Files\cmake\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
