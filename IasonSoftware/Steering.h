@@ -15,21 +15,22 @@ class Steering {
 	WheelPlatform *_wheelPlatform;
 	GCSCommunicator *_communicator;
 
-	float _linearAcceleration, _angularAcceleration;
+	float _linearVelo; // m/s
+	float _angularVelo;// Degree/s
 
-	bool _positiveLinearAcceleration;
-	bool _negativeLinearAcceleration;
-	bool _positiveAngularAcceleration;
-	bool _negativeAngularAcceleration;
+	bool _positiveLinearVelo;
+	bool _negativeLinearVelo;
+	bool _positiveAngularVelo;
+	bool _negativeAngularVelo;
 
 
 public:
 	typedef void (Steering::*splaMethod)();
 	splaMethod splaMethodInstance;
-	void steerPositiveLinearAcceleration(); // gets called automatically
-	void steerNegativeLinearAcceleration(); // gets called automatically
-	void steerPositiveAngularAcceleration(); // gets called automatically
-	void steerNegativeAngularAcceleration(); // gets called automatically
+	void steerPositiveLinearVelo(); // gets called automatically
+	void steerNegativeLinearVelo(); // gets called automatically
+	void steerPositiveAngularVelo(); // gets called automatically
+	void steerNegativeAngularVelo(); // gets called automatically
 
 	Steering(WheelPlatform *wheelPlatform, GCSCommunicator *communicator);
 	void update();

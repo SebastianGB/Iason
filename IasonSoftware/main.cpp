@@ -55,25 +55,25 @@ void terminateSignalHandler(int signal)
 //TODO rename v1 - 4
 void v1()
 {
-	steering->steerPositiveLinearAcceleration();
+	steering->steerPositiveLinearVelo();
 }
 void v2()
 {
-	steering->steerNegativeLinearAcceleration();
+	steering->steerNegativeLinearVelo();
 }
 void v3()
 {
-	steering->steerPositiveAngularAcceleration();
+	steering->steerPositiveAngularVelo();
 }
 void v4()
 {
-	steering->steerNegativeAngularAcceleration();
+	steering->steerNegativeAngularVelo();
 }
 
 int main()
 {
 	wheelPlatform = new WheelPlatform();
-	communicator = new GCSCommunicator(24718);
+	communicator = new GCSCommunicator(24719);
 	steering = new Steering(wheelPlatform, communicator);
 
 	signal(SIGINT,terminateSignalHandler);
@@ -99,7 +99,7 @@ int main()
 			std::cout << "Connection closed by main" << std::endl;
 			communicator->~GCSCommunicator();
 		}
-		usleep(100000);
+		usleep(10000);
 	}
 
 

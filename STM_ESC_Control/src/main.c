@@ -97,12 +97,19 @@ void delay(int d) {
 
 #define PWM_WIDTH_MULTIPLICATOR	100
 
-int usartPwmtoPwm(int value, int direction){
+#define ESC_PWM_BACKWARDS_MAX 1000
+#define ESC_PWM_BACKWARDS_MIN 1400
+#define ESC_PWM_FORWARD_MAX 2000
+#define ESC_PWM_FORWARD_MIN 1600
+#define ESC_PWM_BREAK 1500
 
-	if(direction){
-		return 1400 - (value * 400) / 63;
+int usartPwmtoPwm(int value, int direction){
+	if(value == 0){
+		return ESC_PWM_BREAK;
+	} else if(direction){
+		return ESC_PWM_FORWARD_MIN + (value * 400) / 63;
 	} else {
-		return 1400 + (value * 400) / 63;
+		return ESC_PWM_BACKWARDS_MIN - (value * 400) / 63;
 	}
 }
 

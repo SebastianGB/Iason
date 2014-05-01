@@ -11,55 +11,59 @@
 Steering::Steering(WheelPlatform *wheelPlatform, GCSCommunicator *communicator) {
 	_wheelPlatform = wheelPlatform;
 	_communicator = communicator;
-	_linearAcceleration = 0.5f;
-	_angularAcceleration = 2.0f;
+	_linearVelo = 2.5f;
+	_angularVelo = 90.0f;
 
-	splaMethodInstance = &Steering::steerPositiveLinearAcceleration;
+	splaMethodInstance = &Steering::steerPositiveLinearVelo;
 
 	std::cout << "Steering created"  << std::endl;
 }
 
 void Steering::update()
 {
-	float linAcc, angAcc;
-	linAcc = angAcc = 0.f;
+	float linVelo, angVelo;
+	linVelo = angVelo = 0.f;
 
-	if(_positiveLinearAcceleration)
+	if(_positiveLinearVelo && !_negativeLinearVelo)
 	{
-		linAcc += _linearAcceleration;
-
+		linVelo = _linearVelo;
+	}
+	else if(_negativeLinearVelo && !_positiveAngularVelo)
+	{
+		linVelo = -_linearVelo;
 	}
 
-	if(_negativeLinearAcceleration)
-		linAcc -= _linearAcceleration;
+	if(_positiveAngularVelo && !_negativeAngularVelo)
+	{
+		angVelo = _angularVelo;
+	}
+	if(_negativeAngularVelo && !_positiveAngularVelo)
+	{
+		angVelo = -_angularVelo;
+	}
 
-	if(_positiveAngularAcceleration)
-		angAcc += _linearAcceleration;
-	if(_negativeAngularAcceleration)
-		angAcc -= _linearAcceleration;
-
-	_wheelPlatform->setAngularAcceleration(angAcc);
-	_wheelPlatform->setLinearAcceleration(linAcc);
+	_wheelPlatform->setTargetAngularVelocity(angVelo);
+	_wheelPlatform->setTargetLinearVelocity(linVelo);
 }
 
-void Steering::steerPositiveLinearAcceleration()
+void Steering::steerPositiveLinearVelo()
 {
-	_positiveLinearAcceleration = _communicator->getComObjValue(STEERING_EVENT, KEY_UP);
+	_positiveLinearVelo = _communicator->getComObjValue(STEERING_EVENT, KEY_UP);
 	//update();
 }
-void Steering::steerNegativeLinearAcceleration()
+void Steering::steerNegativeLinearVelo()
 {
-	_negativeLinearAcceleration = _communicator->getComObjValue(STEERING_EVENT, KEY_DOWN);
+	_negativeLinearVelo = _communicator->getComObjValue(STEERING_EVENT, KEY_DOWN);
 	update();
 }
-void Steering::steerPositiveAngularAcceleration()
+void Steering::steerPositiveAngularVelo()
 {
-	_positiveAngularAcceleration = _communicator->getComObjValue(STEERING_EVENT, KEY_LEFT);
+	_positiveAngularVelo = _communicator->getComObjValue(STEERING_EVENT, KEY_LEFT);
 	update();
 }
-void Steering::steerNegativeAngularAcceleration()
+void Steering::steerNegativeAngularVelo()
 {
-	_negativeAngularAcceleration = _communicator->getComObjValue(STEERING_EVENT, KEY_RIGHT);
+	_negativeAngularVelo = _communicator->getComObjValue(STEERING_EVENT, KEY_RIGHT);
 	update();
 }
 
