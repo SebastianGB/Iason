@@ -429,7 +429,7 @@ int main (int argc, char **argv)
 	filename[0] = 0;
 	option_punctlist[0] = 0;
 
-    std::string test = "/home/brunner/espeak-1.48.04-source/";
+    std::string test = "/usr/share";
     data_path = (char *)test.c_str();
 
 

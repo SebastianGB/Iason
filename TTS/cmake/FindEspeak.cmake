@@ -3,9 +3,10 @@ INCLUDE( LibFindMacros )
 
 FIND_PATH(Espeak_INCLUDE_DIR
 	NAMES
-		speak_lib.h
+                espeak/speak_lib.h
 	PATHS
-		/home/brunner/Iason/TTS/include
+		#/home/brunner/Iason/TTS/include
+                #/usr/include/espeak
 
 )
 
@@ -13,7 +14,8 @@ FIND_PATH(Espeak_INCLUDE_DIR
 FIND_LIBRARY(Espeak_LIBRARY 
 		espeak
 	PATHS
-		/home/brunner/espeak-1.48.04-source/src/
+		#/home/brunner/espeak-1.48.04-source/src/
+                #/usr/lib/x86_64-linux-gnu/
 )
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.

@@ -5,7 +5,7 @@ FIND_PATH(Portaudio_INCLUDE_DIR
 	NAMES
 		portaudio.h
 	PATHS
-		/home/brunner/espeak-1.48.04-source/src
+                #/home/brunner/espeak-1.48.04-source/src
 
 )
 
@@ -13,7 +13,7 @@ FIND_PATH(Portaudio_INCLUDE_DIR
 FIND_LIBRARY(Portaudio_LIBRARY 
 		portaudio
 	PATHS
-		/usr/lib/x86_64-linux-gnu/
+                #/usr/lib/x86_64-linux-gnu/
 )
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.

@@ -10,3 +10,6 @@
 *.pro.user
 Debug
 debug
+build
+*.user
+stlink/
