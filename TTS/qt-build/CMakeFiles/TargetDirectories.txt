@@ -1,1 +1,0 @@
-/home/brunner/Iason/TTS/qt-build/CMakeFiles/TTS.dir

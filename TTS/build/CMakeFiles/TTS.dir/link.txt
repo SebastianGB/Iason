@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/TTS.dir/src/espeak.cpp.o  -o ../bin/TTS -rdynamic -lportaudio -lespeak -lstdc++ 
